@@ -1,0 +1,92 @@
+#include<iostream>
+#include<string>
+#include<vector>
+using namespace std;
+string strAns("");
+
+void getSum(string str1,string str2) {
+    strAns.erase();
+    if(str2=="0") {
+        strAns=str1;
+        return;
+    }
+    int carry=0,i=0,j=0,sum=0;
+    for(i=str1.size()-1,j=str2.size()-1;i>=0&&j>=0;i--,j--) {
+        sum=(str1[i]-'0')+(str2[j]-'0')+carry;
+        carry=sum==0?0:sum/10;
+        sum%=10;
+        strAns=char(sum+'0')+strAns;
+    }
+    while(i>=0) {
+        sum=carry+(str1[i]-'0');
+        carry=sum==0?0:sum/10;
+        sum%=10;
+        strAns=char(sum+'0')+strAns;
+        i--;
+    }
+    while(j>=0) {
+        sum=carry+(str2[j]-'0');
+        carry=sum==0?0:sum/10;
+        sum%=10;
+        strAns=char(sum+'0')+strAns;
+        j--;
+    }
+    strAns=carry>0?char(carry+'0')+strAns:strAns;
+}
+
+
+void getDiff(string str1, string str2) {
+    strAns.erase();
+    int carry=0,i=0,j,diff=0,temp=0;
+    for(i=str1.size()-1,j=str2.size()-1;i>=0&&j>=0;i--,j--) {
+        diff=(str1[i]-'0')-(str2[j]-'0');
+        if(diff>=0) {
+        strAns=char(diff+'0')+strAns;
+        continue;
+        }
+        diff+=10;
+        strAns=char(diff+'0')+strAns;
+        temp=i-1;
+        while(str1[temp]=='0') {
+            str1[temp]='9';
+            temp--;
+        }
+        str1[temp]--;
+    }
+    while(i>=0) {
+        strAns=str1[i]+strAns;
+        i--;
+    }
+    for(i=0;strAns[i]=='0';)
+            strAns.erase(i,1);
+}
+
+int main() {
+    int loopVar1,loopVar2;
+    string copyStr(""),sumOfApples(""),differenceOfApples(""),tempStr("");
+    for(loopVar1=0;loopVar1<10;loopVar1++) {
+        sumOfApples.erase();
+        copyStr.erase();
+        differenceOfApples.erase();
+        tempStr.erase();
+        cin>>sumOfApples>>differenceOfApples;
+        getSum(sumOfApples,differenceOfApples);
+        copyStr=tempStr=strAns;
+        strAns.erase();
+        for(loopVar2=0;loopVar2<4;loopVar2++) {
+            getSum(tempStr,copyStr);
+            tempStr=strAns;
+        }
+        strAns.erase(strAns.size()-1);
+        cout<<strAns<<"\n";
+        copyStr.erase();
+        copyStr=strAns;
+        getDiff(sumOfApples,copyStr);
+        if(strAns.empty()) {
+            cout<<"0";
+            continue;
+        }
+        cout<<strAns<<"\n";
+    }
+    return 0;
+}
